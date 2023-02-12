@@ -1,37 +1,46 @@
 <script>
-	import { draggable } from '@neodrag/svelte';
-    import Card from './Card/Card.svelte';
+	import { flip } from 'svelte/animate';
+	import { dndzone } from 'svelte-dnd-action';
+	import Card from './Card/Card.svelte';
 	import TitleCard from './Card/TitleCard.svelte';
+
+	export let columnItems;
+	const flipDurationMs = 300;
+	function handleDndConsiderColumns(e) {
+		columnItems = e.detail.items;
+	}
+	function handleDndFinalizeColumns(e) {
+		columnItems = e.detail.items;
+	}
+	function handleDndConsiderCards(cid, e) {
+		const colIdx = columnItems.findIndex((c) => c.id === cid);
+		columnItems[colIdx].items = e.detail.items;
+		columnItems = [...columnItems];
+	}
+	function handleDndFinalizeCards(cid, e) {
+		const colIdx = columnItems.findIndex((c) => c.id === cid);
+		columnItems[colIdx].items = e.detail.items;
+		columnItems = [...columnItems];
+	}
 </script>
 
-<div class="flex w-3/4 mx-auto my-24">
-    <div class="flex flex-col space-y-10 w-1/5">
-        <TitleCard title={"Todo"}/>
-        <Card title={"Status 1A"}/>
-        <Card title={"Status 1B"}/>
-        <Card title={"Status 1C"}/>
-        <Card title={"Status 1D"}/>
-    </div>
-	<div class="divider divider-horizontal" />
-    <div class="flex flex-col space-y-10 w-1/5">
-        <TitleCard title={"In Progress"}/>
-        <Card title={"Status 2"}/>
-    </div>
-	<div class="divider divider-horizontal" />
-    <div class="flex flex-col space-y-10 w-1/5">
-        <TitleCard title={"Code Review"}/>
-        <Card title={"Status 3"}/>
-    </div>
-	<div class="divider divider-horizontal" />
-    <div class="flex flex-col space-y-10 w-1/5">
-        <TitleCard title={"Development Done"}/>
-        <Card title={"Status 4"}/>
-    </div>
-	<div class="divider divider-horizontal" />
-    <div class="flex flex-col space-y-10 w-1/5">
-        <TitleCard title={"QA Done"}/>
-        <div use:draggable={{ ignoreMultitouch: true,grid: [10, 10] }} class="grid h-20  bg-base-300 rounded-box place-items-center">
-            Status-5
-        </div>
-    </div>
-</div>
+<section
+	class="flex w-full px-12 my-12 h-full"
+	use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
+	on:consider={handleDndConsiderColumns}
+	on:finalize={handleDndFinalizeColumns}
+>
+	{#each columnItems as column (column.id)}
+		<div
+			class="flex flex-col space-y-10 w-1/5"
+			use:dndzone={{ items: column.cards, flipDurationMs }}
+			on:consider={(e) => handleDndConsiderCards(column.id, e)}
+			on:finalize={(e) => handleDndFinalizeCards(column.id, e)}
+		>
+			<TitleCard title={column.title} />
+			{#each column.cards as card}
+				<Card title={{ subject: card.subject, category: card.category }} />
+			{/each}
+		</div>
+	{/each}
+</section>
