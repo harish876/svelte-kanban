@@ -23,7 +23,7 @@
             <!--Side bar content here -->
             <li><Title/></li>
 			<li><a class='flex-0 btn btn-ghost p-2'href='./hero'>Hero</a></li>
-			<li><a class='flex-0 btn btn-ghost p-2'href='./board'>Test Board</a></li>
+			<li><a class='flex-0 btn btn-ghost p-2'href='./board'>Board</a></li>
 		</ul>
 	</div>
 </div>

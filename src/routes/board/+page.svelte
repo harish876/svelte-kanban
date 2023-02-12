@@ -1,5 +1,5 @@
 <script>
-    import TestBoard from "../../lib/Components/TestBoard.svelte";
+	import BoardV1 from "../../lib/Components/BoardV1.svelte";
 </script>
 
-<TestBoard/>
+<BoardV1/>
