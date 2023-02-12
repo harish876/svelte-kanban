@@ -1,5 +1,3 @@
-import { writable } from 'svelte/store';
-import { browser } from '$app/environment';
 import { persistStore } from './persistStore';
 
 export const themes = [
@@ -64,20 +62,4 @@ export let board = [
 
 export const boardData = persistStore('kanban-board-items', board)
 
-export const updateStatus = (columnItems) => {
-    
-    boardData.update((columnItems) => {
-		return columnItems
-	});
-    console.log(boardData)
-};
 
-/*
-		return todos.map((todo) => {
-			if (todo.id === id) {
-				return { ...todo, text };
-			}
-			return todo;
-		});
-
-*/
